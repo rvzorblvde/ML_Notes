@@ -3,3 +3,6 @@
 
 # VS Code Workspaces
 machine-learning.code-workspace
+
+# Comma Separated Values 
+*.csv
