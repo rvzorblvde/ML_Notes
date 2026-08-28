@@ -77,3 +77,58 @@ print(f"R²  : {r2_score(y, y_pred):.3f}")
 auto_nuevo = pd.DataFrame({"weight": [3000]})
 mpg_estimado = modelo_mpg.predict(auto_nuevo)
 print(f"MPG estimadas: {mpg_estimado[0]:.2f}")
+
+# =========== Regresion Lineal Multiple ===========
+print("\nRegresión Lineal Múltiple")
+
+# 1. Preparar las variables
+variables = [
+    "weight",
+    "horsepower",
+    "displacement",
+    "acceleration",
+    "model_year",
+    "cylinders"
+]
+
+datos_multiples = auto.dropna(subset=variables + ['mpg']).copy()
+
+X_multiple = datos_multiples[variables]
+y_multiple = datos_multiples['mpg']
+
+modelo_multiple = LinearRegression()
+modelo_multiple.fit(X_multiple, y_multiple)
+
+print(f"Intercepto:", modelo_multiple.intercept_)
+print(f"Coeficientes:")
+
+for variable, coeficiente in zip(variables, modelo_multiple.coef_):
+    print(f"{variable:15s}: {coeficiente:.4}")
+
+# 2. Evaluar la regresión lineal múltiple
+y_pred_multiple = modelo_multiple.predict(X_multiple)
+
+print(f"MAE : {mean_absolute_error(y_multiple, y_pred_multiple):.3f}")
+print(f"MSE: {np.sqrt(mean_squared_error(y_multiple, y_pred_multiple)):.3f}")
+print(f"R²  : {r2_score(y_multiple, y_pred_multiple):.3f}")
+
+# 3. Valores reales vs Valores predichos
+plt.scatter(y_multiple, y_pred_multiple, alpha=0.65)
+
+limite_min = min(y_multiple.min(), y_pred_multiple.min())
+limite_max = max(y_multiple.max(), y_pred_multiple.max())
+
+plt.plot(
+    [limite_min, limite_max],
+    [limite_min, limite_max],
+    linestyle="--",
+    color="red",
+    linewidth=2
+)
+
+plt.xlabel("MPG Real")
+plt.ylabel("MPG Predicho")
+plt.title("Regresión Múltiple: Real vs Predicho")
+plt.legend()
+plt.grid(True)
+plt.show()
